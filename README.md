@@ -2,9 +2,20 @@
     <img alt="Beaver Logo" src="https://raw.githubusercontent.com/Clivern/Beaver/master/assets/img/logo.png" height="80" />
     <h3 align="center">Beaver</h3>
     <p align="center">A Real Time Messaging Server.</p>
+    <p align="center">
+        <img src="https://travis-ci.org/Clivern/Beaver.svg?branch=master">
+        <img src="https://img.shields.io/badge/Version-1.2.0-red.svg">
+        <img src="https://goreportcard.com/badge/github.com/Clivern/Beaver">
+        <img src="https://img.shields.io/badge/LICENSE-MIT-orange.svg">
+    </p>
 </p>
 
 Beaver is a real-time messaging server. With beaver you can easily build scalable in-app notifications, realtime graphs, multiplayer games, chat applications, geotracking and more in web applications and mobile apps.
+
+<p align="center">
+    <img alt="Beaver Single Node" src="https://raw.githubusercontent.com/Clivern/Beaver/master/assets/charts/single_node.png" />
+</p>
+
 
 ## Documentation
 
@@ -24,6 +35,10 @@ app:
     port: 8080
     domain: example.com
     secret: sWUhHRcs4Aqa0MEnYwbuQln3EW8CZ0oD
+    tls:
+        status: off
+        pemPath: cert/server.pem
+        keyPath: cert/server.key
 
 log:
     level: info
@@ -63,7 +78,24 @@ $ ./beaver -config=config.dist.yml
 Also running beaver with docker still an option.
 
 ```bash
-$ cp config.yml config.dist.yml
+$ mkdir -p $HOME/srv/beaver
+$ mkdir -p $HOME/srv/beaver/configs
+$ mkdir -p $HOME/srv/beaver/logs
+
+$ cd $HOME/srv/beaver
+
+$ curl -OL https://raw.githubusercontent.com/Clivern/Beaver/master/Dockerfile
+$ curl -OL https://raw.githubusercontent.com/Clivern/Beaver/master/docker-compose.yml
+$ curl -OL https://raw.githubusercontent.com/Clivern/Beaver/master/config.yml
+
+$ cp config.yml ./configs/config.dist.yml
+$ rm config.yml
+# Update log.path to be the absolute path to config file on host machine ($HOME/srv/beaver/logs)
+$ sed -i "s|var/logs|${HOME}/srv/beaver/logs|g" ./configs/config.dist.yml
+$ sed -i "s|localhost:6379|redis:6379|g" ./configs/config.dist.yml
+
+# Build and run containers
+$ cd $HOME/srv/beaver/
 $ docker-compose build
 $ docker-compose up -d
 ```
@@ -308,35 +340,34 @@ Socket("ws://localhost:8080/ws/$ID/$TOKEN");
 ```
 
 
-## Badges
+## Client:
 
-[![Build Status](https://travis-ci.org/Clivern/Beaver.svg?branch=master)](https://travis-ci.org/Clivern/Beaver)
-[![GitHub license](https://img.shields.io/github/license/Clivern/Beaver.svg)](https://github.com/Clivern/Beaver/blob/master/LICENSE)
-[![Version](https://img.shields.io/badge/Version-1.1.1-red.svg)](https://github.com/Clivern/Beaver/releases)
-[![Go Report Card](https://goreportcard.com/badge/github.com/Clivern/Beaver)](https://goreportcard.com/report/github.com/Clivern/Beaver)
+- [Go Client](https://github.com/domgolonka/beavergo) Thanks [@domgolonka](https://github.com/domgolonka)
 
 
-## Changelog
+## Versioning
 
-* Version 1.1.1:
-```
-Fix Dockerfile.
-```
+For transparency into our release cycle and in striving to maintain backward compatibility, Beaver is maintained under the [Semantic Versioning guidelines](https://semver.org/) and release process is predictable and business-friendly.
 
-* Version 1.1.0:
-```
-Switch to go 1.11 modules.
-Use goreleaser to deliver pre-built binaries.
-Upgrade dependencies.
-```
-
-* Version 1.0.0:
-```
-Initial Release.
-```
+See the [Releases section of our GitHub project](https://github.com/clivern/beaver/releases) for changelogs for each release version of Beaver. It contains summaries of the most noteworthy changes made in each release.
 
 
-## Acknowledgements
+## Bug tracker
+
+If you have any suggestions, bug reports, or annoyances please report them to our issue tracker at https://github.com/clivern/beaver/issues
+
+
+## Security Issues
+
+If you discover a security vulnerability within Beaver, please send an email to [hello@clivern.com](mailto:hello@clivern.com)
+
+
+## Contributing
+
+We are an open source, community-driven project so please feel free to join us. see the [contributing guidelines](CONTRIBUTING.md) for more details.
+
+
+## License
 
 © 2018, Clivern. Released under [MIT License](https://opensource.org/licenses/mit-license.php).
 
